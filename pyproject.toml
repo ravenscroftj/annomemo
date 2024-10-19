@@ -1,0 +1,21 @@
+[project]
+name = "annomemo"
+version = "0.1.0"
+description = "A service for automatically OCRing images attached to memos"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "aiohttp>=3.10.10",
+    "click>=8.1.7",
+    "flask>=3.0.3",
+    "litellm>=1.50.0",
+    "loguru>=0.7.2",
+    "python-dotenv>=1.0.1",
+    "python-telegram-bot>=21.6",
+    "requests>=2.32.3",
+]
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
