@@ -118,7 +118,10 @@ async def memos_add_memo(image_url: str, b64_content: str, annotation: str):
             f"/file/{resource_json['name']}/{resource_json['filename']}",
         )
 
-        content = f"""## Image \n\n ![image]({resource_url}) \n\n## Transcription \n\n{annotation} """
+        content = f"""## Image \n\n ![image]({resource_url}) \n\n## Transcription \n\n{annotation}\n\n"""
+
+        if os.getenv('MEMOS_TAG'):
+            content += f"#{os.getenv('MEMOS_TAG')}\n\n"
 
         # create the memo
         resp = await client.post(
