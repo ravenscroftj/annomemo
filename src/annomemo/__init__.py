@@ -118,9 +118,7 @@ async def memos_add_memo(image_url: str, b64_content: str, annotation: str):
             f"/file/{resource_json['name']}/{resource_json['filename']}",
         )
 
-        content = (
-            f"""## Image \n\n ![image]({resource_url}) \n\n## Transcription \n\n{annotation} """
-        )
+        content = f"""## Image \n\n ![image]({resource_url}) \n\n## Transcription \n\n{annotation} """
 
         # create the memo
         resp = await client.post(
@@ -140,6 +138,18 @@ async def memos_add_memo(image_url: str, b64_content: str, annotation: str):
 
 async def handle_telegram_message(update: Update, context: CallbackContext):
     logger.info(f"{update}")
+
+    try:
+        telegram_whitelist = [ int(id.strip()) for id in os.getenv("TELEGRAM_CHAT_IDS",'').split(',')]
+    except:
+        telegram_whitelist = []
+
+    if update.message.chat.id not in telegram_whitelist:
+        logger.info("Telegram chat id not whitelisted")
+        await update.message.reply_text(
+            f"🤖 Sorry, I'm not allowed to process your photos. Ask admin to add chat id {update.message.chat.id} to the whitelist"
+        )
+        return
 
     if len(update.message.photo) < 1:
         await update.message.reply_text("🤖 Please send me photos to process 📷")
