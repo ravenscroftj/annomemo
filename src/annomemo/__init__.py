@@ -5,6 +5,8 @@ import json
 import aiohttp
 import base64
 
+from urllib.parse import urlparse, urljoin
+
 from loguru import logger
 import litellm
 from dotenv import load_dotenv
@@ -23,7 +25,7 @@ TRANSCRIBE_PROMPT = """Transcribe the hand written notes in the attached image a
 <Content>
 ```
 
-If any words or letters are unclear just ask the user for clarification.
+If any words or letters are unclear, denote them  with a '?<word>?'. For example if you were not sure whether a word is blow or blew you would transcribe it as '?blow?'
 """
 
 
@@ -82,7 +84,58 @@ async def process_image(image_url: str):
         messages=[message],
     )
 
-    return response.choices[0].message["content"]
+    annotation = response.choices[0].message["content"]
+
+    if os.getenv("MEMOS_URL") is not None:
+        memo_url = await memos_add_memo(
+            image_url=image_url, b64_content=b64img, annotation=annotation
+        )
+
+    return response.choices[0].message["content"] + f"\n\nMemo: {memo_url}"
+
+
+async def memos_add_memo(image_url: str, b64_content: str, annotation: str):
+    """Add a new memo with the image and the corresponding transcription"""
+
+    filename = os.path.basename(urlparse(image_url).path)
+
+    async with aiohttp.ClientSession() as client:
+
+        # create the file
+        resource_resp = await client.post(
+            urljoin(os.getenv("MEMOS_URL"), "/api/v1/resources"),
+            headers={"Authorization": f'Bearer {os.getenv("MEMOS_TOKEN")}'},
+            json={
+                "content": b64_content,
+                "filename": filename,
+            },
+        )
+
+        resource_json = await resource_resp.json()
+
+        resource_url = urljoin(
+            os.getenv("MEMOS_URL"),
+            f"/file/{resource_json['name']}/{resource_json['filename']}",
+        )
+
+        content = (
+            f"""## Image \n\n ![image]({resource_url}) \n\n## Transcription \n\n{annotation} """
+        )
+
+        # create the memo
+        resp = await client.post(
+            urljoin(os.getenv("MEMOS_URL"), "/api/v1/memos"),
+            headers={"Authorization": f'Bearer {os.getenv("MEMOS_TOKEN")}'},
+            json={
+                "content": content,
+                "filename": filename,
+                "resources": [resource_json],
+            },
+        )
+
+        note_json = await resp.json()
+
+        return urljoin(os.getenv("MEMOS_URL"), f"/m/{note_json['uid']}")
 
 
 async def handle_telegram_message(update: Update, context: CallbackContext):
@@ -95,17 +148,19 @@ async def handle_telegram_message(update: Update, context: CallbackContext):
     # find the biggest image and keep it as we want to do OCR on it
     file = max(update.message.photo, key=lambda x: x["file_size"])
 
-
     await update.message.reply_chat_action(action=ChatAction.TYPING)
 
     logger.info(f"Processing file {file['file_id']}")
-    photo = await context.bot.get_file(file['file_id'])
+    photo = await context.bot.get_file(file["file_id"])
 
     try:
         resp = await process_image(photo.file_path)
         await update.message.reply_text(resp, reply_to_message_id=update.message.id)
     except Exception as e:
-        logger.error(f"{e}")
+
+        logger.opt(exception=e).error(
+            f"Failed to process message",
+        )
         await update.message.reply_text("🤖 " + str(e))
 
 
