@@ -92,24 +92,21 @@ async def handle_telegram_message(update: Update, context: CallbackContext):
         await update.message.reply_text("🤖 Please send me photos to process 📷")
         return
 
-    # bucket together photos by file_id and keep the one with the largest file_size
-    file_ids = set([str(photo["file_id"]) for photo in update.message.photo])
+    # find the biggest image and keep it as we want to do OCR on it
+    file = max(update.message.photo, key=lambda x: x["file_size"])
 
-    print(file_ids, "set", set(file_ids))
 
     await update.message.reply_chat_action(action=ChatAction.TYPING)
 
-    for file in file_ids:
-        logger.info(f"Processing file {file}")
-        photo = await context.bot.get_file(file)
+    logger.info(f"Processing file {file['file_id']}")
+    photo = await context.bot.get_file(file['file_id'])
 
-        try:
-            resp = await process_image(photo.file_path)
-            await update.message.reply_text(resp)
-        except Exception as e:
-            logger.error(f"{e}")
-            await update.message.reply_text("🤖 " + str(e))
-        break
+    try:
+        resp = await process_image(photo.file_path)
+        await update.message.reply_text(resp, reply_to_message_id=update.message.id)
+    except Exception as e:
+        logger.error(f"{e}")
+        await update.message.reply_text("🤖 " + str(e))
 
 
 @click.command()
