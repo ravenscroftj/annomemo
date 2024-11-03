@@ -1,0 +1,21 @@
+name: Quay build on commit
+on:
+  push:
+    branches:
+      - main # You can adjust this to trigger on specific branches
+
+jobs:
+  curl-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Make curl request
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"commit": "${{ github.sha }}", "repository": "${{ github.repository }}"}' \
+             $WEBHOOK_URL
