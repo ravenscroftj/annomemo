@@ -16,3 +16,4 @@ Set up a `.env` file based on the `.env.example` file. The variables needed are 
 - `TELEGRAM_TOKEN` - your bot's telegram token. Use [the official telegram docs](https://core.telegram.org/bots/tutorial#obtain-your-bot-token) to obtain your token.
 - `MEMOS_URL` - (optional), enable [memos](https://www.usememos.com/) integration by passing the URL for your self-hosted memos server.
 - `MEMOS_TOKEN` - (optional), if memos is enabled, pass an authentication token to allow the bot to add memos.
+- `MEMOS_TAG` - (optional) if memos is enabled and you want to tag your notes with a specific tag, pass it here.

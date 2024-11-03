@@ -1,5 +1,7 @@
 import aiohttp
 import os
+import base64
+
 from urllib.parse import urljoin, urlparse
 
 from typing import List
@@ -25,12 +27,16 @@ def load_plugins() -> List[BotPlugin]:
 class MemosPlugin(BotPlugin):
     """Add the processed data to a memo and append the link to the response"""
 
-    async def memos_add_memo(self, image_url: str, b64_content: str, annotation: str):
+    async def memos_add_memo(self, image_url: str, annotation: str):
         """Add a new memo with the image and the corresponding transcription"""
 
         filename = os.path.basename(urlparse(image_url).path)
 
         async with aiohttp.ClientSession() as client:
+
+            img_response = await client.get(image_url)
+            bytearray = await img_response.read()
+            b64img = base64.b64encode(bytearray).decode("utf-8")
 
             # create the file
             resource_resp = await client.post(
@@ -38,7 +44,7 @@ class MemosPlugin(BotPlugin):
                 headers={"Authorization": f'Bearer {
                     os.getenv("MEMOS_TOKEN")}'},
                 json={
-                    "content": b64_content,
+                    "content": b64img,
                     "filename": filename,
                 },
             )

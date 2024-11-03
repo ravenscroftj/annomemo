@@ -77,13 +77,24 @@ class BotMessageHandler(MessageHandler):
 
         try:
             resp = await self._image_processor.process_image(photo.file_path)
-            await update.message.reply_text(resp, reply_to_message_id=update.message.id)
+
         except Exception as e:
 
             logger.opt(exception=e).error(
                 f"Failed to process message",
             )
             await update.message.reply_text("🤖 " + str(e))
+            return
+
+        for plugin in self.plugins:
+            try:
+                resp = await plugin.amend_final_response(photo.file_path, resp)
+            except Exception as e:
+                logger.opt(exception=e).warning(
+                    f"Failed to amend final response",
+                )
+
+        await update.message.reply_text(resp, reply_to_message_id=update.message.id)
 
 
 @click.command()
