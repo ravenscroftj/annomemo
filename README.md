@@ -18,3 +18,25 @@ Set up a `.env` file based on the `.env.example` file. The variables needed are 
 - `MEMOS_URL` - (optional), enable [memos](https://www.usememos.com/) integration by passing the URL for your self-hosted memos server.
 - `MEMOS_TOKEN` - (optional), if memos is enabled, pass an authentication token to allow the bot to add memos.
 - `MEMOS_TAG` - (optional) if memos is enabled and you want to tag your notes with a specific tag, pass it here.
+
+## Running Locally / Bare Metal
+
+To run the bot locally on your machine after configuration simply run:
+
+```bash
+uv run annomemo
+```
+
+If there are any configuration issues then you should see them in the logs. You might want to use a tool like tmux to keep it running in the background.
+
+## Running with Docker
+
+You can use the provided [docker image](https://hub.docker.com/repository/docker/ravenscroftj/annomemo/general) to run the bot without installing Python locally. You will need to pass environment variables via an env file.
+
+For example you can run:
+
+```bash
+docker run --env-file=env.docker ravenscroftj/annomemo:latest
+```
+
+or you might want to use the [docker-compose.yml file](https://github.com/ravenscroftj/annomemo/blob/master/docker-compose.yml) provided in this repo.

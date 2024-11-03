@@ -1,4 +1,4 @@
 services:
   annomemo:
-    build: .
+    image: ravenscroftj/annomemo
     env_file: .env
