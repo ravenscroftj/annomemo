@@ -9,7 +9,6 @@ import litellm
 import os
 
 
-
 from loguru import logger
 
 TRANSCRIBE_PROMPT = """Transcribe the hand written notes in the attached image and present them as markdown inside a fence like so
@@ -27,6 +26,7 @@ class ImageProcessException(Exception):
 
     pass
 
+
 class ImageProcessorConfigurationException(ImageProcessException):
     """Thrown if the image processor is misconfigured after call to validate()"""
 
@@ -39,8 +39,8 @@ class ImageProcessor(ABC):
 
     async def process_image(self, image_url: str) -> str:
         """Process image and return text"""
-        raise NotImplementedError
-    
+        raise NotImplementedError()
+
 
 def get_image_processor() -> ImageProcessor:
     """Get image processor based on environment variable"""
@@ -51,6 +51,7 @@ def get_image_processor() -> ImageProcessor:
         return LiteLLMImageProcessor()
     else:
         raise ImageProcessException(f'Invalid image processor {processor}')
+
 
 class QwenV2ImageProcessor(ImageProcessor):
     """Implementation of image processor using QwenV2 for local VLM inference"""
@@ -74,24 +75,28 @@ class LiteLLMImageProcessor(ImageProcessor):
 
             if len(result["missing_keys"]) > 0:
                 raise ImageProcessorConfigurationException(
-                    f"Missing the following environment variables: {result['missing_keys']}"
+                    f"Missing the following environment variables: {
+                        result['missing_keys']}"
                 )
             else:
                 raise ImageProcessorConfigurationException(
-                    f"Failed to validate model environment with MODEL={model_name}"
+                    f"Failed to validate model environment with MODEL={
+                        model_name}"
                 )
 
         if not litellm.supports_vision(model="gpt-4-vision-preview"):
-            raise ImageProcessorConfigurationException(f"Vision not supported by {model_name}")
+            raise ImageProcessorConfigurationException(
+                f"Vision not supported by {model_name}")
 
         logger.info("AI API connection is ready")
 
-    async def process_image(image_url: str):
+    async def process_image(self, image_url: str):
         """Process the given image and respond with the result from the model"""
 
         mtype, _ = mimetypes.guess_type(image_url)
         if mtype is None:
-            raise ImageProcessException(f"Failed to detect mime type for file {mtype}")
+            raise ImageProcessException(
+                f"Failed to detect mime type for file {mtype}")
 
         async with aiohttp.ClientSession() as client:
             img_response = await client.get(image_url)
@@ -118,4 +123,4 @@ class LiteLLMImageProcessor(ImageProcessor):
             messages=[message],
         )
 
-        return response.choices[0].message["content"] 
+        return response.choices[0].message["content"]

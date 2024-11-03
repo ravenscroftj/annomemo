@@ -2,13 +2,16 @@ import aiohttp
 import os
 from urllib.parse import urljoin, urlparse
 
+from typing import List
+
+
 class BotPlugin:
-    
+
     async def amend_final_response(self, image_url: str, response: str):
         """Plugin is passed the response so far and is allowed to edit the string"""
 
 
-def load_plugins() -> list[BotPlugin]:
+def load_plugins() -> List[BotPlugin]:
     """Load all applicable plugins"""
 
     plugins = []
@@ -22,7 +25,6 @@ def load_plugins() -> list[BotPlugin]:
 class MemosPlugin(BotPlugin):
     """Add the processed data to a memo and append the link to the response"""
 
-
     async def memos_add_memo(self, image_url: str, b64_content: str, annotation: str):
         """Add a new memo with the image and the corresponding transcription"""
 
@@ -33,7 +35,8 @@ class MemosPlugin(BotPlugin):
             # create the file
             resource_resp = await client.post(
                 urljoin(os.getenv("MEMOS_URL"), "/api/v1/resources"),
-                headers={"Authorization": f'Bearer {os.getenv("MEMOS_TOKEN")}'},
+                headers={"Authorization": f'Bearer {
+                    os.getenv("MEMOS_TOKEN")}'},
                 json={
                     "content": b64_content,
                     "filename": filename,
@@ -47,7 +50,8 @@ class MemosPlugin(BotPlugin):
                 f"/file/{resource_json['name']}/{resource_json['filename']}",
             )
 
-            content = f"""## Image \n\n ![image]({resource_url}) \n\n## Transcription \n\n{annotation}\n\n"""
+            content = f"""## Image \n\n ![image]({resource_url}) \n\n## Transcription \n\n{
+                annotation}\n\n"""
 
             if os.getenv("MEMOS_TAG"):
                 content += f"#{os.getenv('MEMOS_TAG')}\n\n"
@@ -55,7 +59,8 @@ class MemosPlugin(BotPlugin):
             # create the memo
             resp = await client.post(
                 urljoin(os.getenv("MEMOS_URL"), "/api/v1/memos"),
-                headers={"Authorization": f'Bearer {os.getenv("MEMOS_TOKEN")}'},
+                headers={"Authorization": f'Bearer {
+                    os.getenv("MEMOS_TOKEN")}'},
                 json={
                     "content": content,
                     "filename": filename,

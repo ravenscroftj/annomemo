@@ -14,8 +14,10 @@ from telegram.ext import (
     CallbackContext,
 )
 
+from typing import Sequence
+
 from .ocr import get_image_processor, ImageProcessor
-from .plugins import load_plugins
+from .plugins import load_plugins, BotPlugin
 
 TRANSCRIBE_PROMPT = """Transcribe the hand written notes in the attached image and present them as markdown inside a fence like so
 
@@ -31,19 +33,20 @@ class ImageProcessException(Exception):
     pass
 
 
-class BotPlugin:
-    pass
-
-
 class BotMessageHandler(MessageHandler):
 
-    def __init__(self, image_processor: ImageProcessor, plugins: list[BotPlugin] = []):
+    def __init__(self, image_processor: ImageProcessor, plugins: Sequence[BotPlugin] = []):
+        super().__init__(telefilters.ALL, self.handle_telegram_message)
         self._image_processor = image_processor
         self.plugins = plugins
 
-    async def __call__(self, update: Update, context: CallbackContext):
+    async def handle_telegram_message(self, update: Update, context: CallbackContext):
         """Handle response to message"""
         logger.info(f"{update}")
+
+        if update.message is None:
+            logger.warning(f"No message received {update}")
+            return
 
         try:
             telegram_whitelist = [
@@ -55,7 +58,8 @@ class BotMessageHandler(MessageHandler):
         if update.message.chat.id not in telegram_whitelist:
             logger.info("Telegram chat id not whitelisted")
             await update.message.reply_text(
-                f"🤖 Sorry, I'm not allowed to process your photos. Ask admin to add chat id {update.message.chat.id} to the whitelist"
+                f"🤖 Sorry, I'm not allowed to process your photos. Ask admin to add chat id {
+                    update.message.chat.id} to the whitelist"
             )
             return
 
@@ -87,6 +91,10 @@ def main():
     logger.info("Starting AnnoMemo...")
     load_dotenv()
 
+    if os.getenv("TELEGRAM_TOKEN") is None:
+        logger.error("No telegram token provided via TELEGRAM_TOKEN env var")
+        exit(-1)
+
     processor = get_image_processor()
 
     logger.info("Validating image processing approach")
@@ -96,7 +104,7 @@ def main():
 
     bot = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
 
-    bot.add_handler(MessageHandler(telefilters.ALL, handle_telegram_message))
+    bot.add_handler(BotMessageHandler(processor, plugins))
 
     bot.run_polling()
 
