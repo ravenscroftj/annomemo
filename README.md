@@ -10,6 +10,7 @@ Requires Python 3.10+ and [uv](https://docs.astral.sh/uv/).
 
 Set up a `.env` file based on the `.env.example` file. The variables needed are as follows:
 
+- `MODEL` - The model to use for OCRing, this should be a valid LiteLLM Model ID with the provider prefix e.g. `openai/gpt-4o`
 - `OPENAI_API_KEY` - Your OpenAI API key. If you are using a non-OAI service or a proxy (like litellm), then pass your litellm token here.
 - `OPENAI_API_BASE` - (optional) if you are using an openai compatible service like litellm, pass the URL here e.g. `https://litellm.example.com`
 - `TELEGRAM_CHAT_IDS` - comma-separated list of chat ids that are allowed to interact with your bot. To get this ID, start the bot with this variable empty and it will respond with the chat ID. Then add your chat ID and restart the app.
