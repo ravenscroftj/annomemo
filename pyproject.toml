@@ -6,13 +6,18 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "aiohttp>=3.10.10",
+    "alembic>=1.14.0",
     "click>=8.1.7",
+    "fastapi>=0.115.4",
     "flask>=3.0.3",
     "litellm>=1.50.0",
     "loguru>=0.7.2",
+    "pwdlib[argon2]>=0.2.1",
     "python-dotenv>=1.0.1",
     "python-telegram-bot>=21.6",
     "requests>=2.32.3",
+    "sqlmodel>=0.0.22",
+    "uvicorn>=0.32.0",
 ]
 
 [project.optional-dependencies]
