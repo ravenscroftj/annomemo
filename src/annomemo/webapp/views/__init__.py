@@ -1,6 +1,8 @@
 from ..app import app, templates
 
-from . import auth
+from .auth import authapi
+
+app.mount("/auth", authapi)
 
 
 @app.route("/")
