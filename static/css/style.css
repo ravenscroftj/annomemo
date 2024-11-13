@@ -1,0 +1,120 @@
+/* Custom styles for the landing page */
+
+/* Hero section */
+#hero {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+#hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+#hero p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+.cta-button {
+  display: inline-block;
+  font-size: 1.2rem;
+  padding: 0.8rem 1.5rem;
+  text-decoration: none;
+  background-color: var(--accent);
+  color: var(--accent-text);
+  border-radius: var(--standard-border-radius);
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Features section */
+#features ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#features li {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+#features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+/* Integrations section */
+#integrations ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+}
+
+#integrations li {
+  margin: 0.5rem 1rem;
+  font-size: 1.1rem;
+}
+
+/* Telegram bot section */
+#telegram-bot {
+  background-color: var(--accent-bg);
+  padding: 2rem;
+  border-radius: var(--standard-border-radius);
+}
+
+/* CTA section */
+#cta {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+#cta h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+#cta p {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+/* Responsive adjustments */
+@media only screen and (max-width: 720px) {
+  #hero h2 {
+    font-size: 2rem;
+  }
+
+  #hero p {
+    font-size: 1rem;
+  }
+
+  .cta-button {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    color: whitesmoke;
+  }
+
+  #features li,
+  #integrations li {
+    font-size: 1rem;
+  }
+
+  #cta h2 {
+    font-size: 1.75rem;
+  }
+
+  #cta p {
+    font-size: 1rem;
+  }
+}

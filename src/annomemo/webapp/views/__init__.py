@@ -5,4 +5,4 @@ from . import auth
 
 @app.route("/")
 async def index(req):
-    return templates.TemplateResponse(req, "main.html", context={})
+    return templates.TemplateResponse(req, "landing.html", context={})

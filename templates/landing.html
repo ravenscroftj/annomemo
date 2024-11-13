@@ -1,0 +1,61 @@
+{% extends "main.html" %} {% block content %}
+<section class="text-center mb-16">
+  <h1 class="text-4xl font-bold text-gray-800 mb-4">
+    Transform Handwritten Notes into Digital Text
+  </h1>
+  <p class="text-xl text-gray-600 mb-8">
+    AnnoMemo uses intelligent OCR to digitize your handwritten notes and
+    integrate them with your favorite PKM tools.
+  </p>
+  <a
+    href="#"
+    class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300"
+    >Get Started</a
+  >
+</section>
+
+<section id="features" class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Features</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-xl font-semibold mb-2">Intelligent OCR</h3>
+      <p class="text-gray-600">
+        Accurately convert handwritten notes to digital text
+      </p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-xl font-semibold mb-2">PKM Integration</h3>
+      <p class="text-gray-600">
+        Seamlessly integrate with Obsidian, Memos, and Joplin
+      </p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-xl font-semibold mb-2">Bot Support</h3>
+      <p class="text-gray-600">Process photos via Telegram and Discord bots</p>
+    </div>
+  </div>
+</section>
+
+<section id="integrations" class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Integrations</h2>
+  <div class="flex flex-wrap justify-center gap-8">
+    <img src="path_to_obsidian_logo.png" alt="Obsidian" class="h-12" />
+    <img src="path_to_memos_logo.png" alt="Memos" class="h-12" />
+    <img src="path_to_joplin_logo.png" alt="Joplin" class="h-12" />
+    <img src="path_to_telegram_logo.png" alt="Telegram" class="h-12" />
+    <img src="path_to_discord_logo.png" alt="Discord" class="h-12" />
+  </div>
+</section>
+
+<section id="pricing" class="text-center">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Simple Pricing</h2>
+  <p class="text-xl text-gray-600 mb-8">
+    Start for free, upgrade when you need more
+  </p>
+  <a
+    href="#"
+    class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300"
+    >View Pricing Plans</a
+  >
+</section>
+{% endblock %}

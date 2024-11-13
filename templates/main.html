@@ -3,30 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My New Website</title>
-    <link rel="stylesheet" href="/static/css/simple.css" />
+    <title>AnnoMemo - Intelligent OCR for Handwritten Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <header>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/register">Register</a>
-        <a href="/about">About AnnoMemo</a>
-      </nav>
-      <h1>AnnoMemo</h1>
-      <p>Intelligent OCR with Personal Knowledge Management Integration</p>
-    </header>
+  <body class="bg-gray-100 font-sans">
+    <header class="bg-white shadow-sm">{% include "partial/nav.html" %}</header>
 
-    <main>
-      <p>
-        This is my new website and it's using Simple.css. It's really cool. If
-        you want to use it too, you can
-        <a href="https://simplecss.org">visit their site</a>.
-      </p>
+    <main class="container mx-auto px-6 py-8">
+      {%block content%} {%endblock%}
     </main>
 
-    <footer>
-      <p>AnnoMemo by <a href="https://jamesravey.me">James Ravenscroft</a>, Copyright 2024. All rihts reserved.</p>
+    <footer class="bg-gray-800 text-white py-8">
+      <div class="container mx-auto px-6 text-center">
+        <p>&copy; 2023 AnnoMemo. All rights reserved.</p>
+      </div>
     </footer>
   </body>
 </html>
