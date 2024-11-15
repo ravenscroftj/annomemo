@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 
 app = FastAPI(title="AnnoMemo")
 
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")

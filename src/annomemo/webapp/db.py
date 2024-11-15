@@ -1,8 +1,5 @@
-import email
 import os
-from pwdlib import PasswordHash
-from pwdlib.hashers.argon2 import Argon2Hasher
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Session
 from typing import Optional
 
 from sqlalchemy import create_engine
@@ -24,10 +21,3 @@ class User(SQLModel):
 class UserInDB(User, table=True):
     __tablename__: str = "users"
     password: str = Field()
-
-    @classmethod
-    def from_email_and_password(cls, email: str, password: str) -> 'UserInDB':
-
-        hasher = PasswordHash(hashers=[Argon2Hasher()])
-
-        return cls(email=email, password=hasher.hash(password))

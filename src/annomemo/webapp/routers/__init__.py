@@ -1,8 +1,8 @@
-from ..app import app, templates
+from ..main import app, templates
 
 from .auth import authapi
 
-app.mount("/auth", authapi)
+app.include_router(authapi)
 
 
 @app.route("/")
