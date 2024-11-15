@@ -48,15 +48,10 @@ async def register_payload(req: Request):
     raw_data = await req.form()
     try:
         reg_form = RegistrationForm(**raw_data)
+
     except ValidationError as e:
-        print("Error", e.errors())
-        print(
-            {"errors": {err["loc"][0]: err["msg"] for err in e.errors()}},
-        )
         return templates.TemplateResponse(
             req,
             "register.html",
             {"errors": {err["loc"][0]: err["msg"] for err in e.errors()}},
         )
-
-    return
