@@ -15,6 +15,7 @@ engine = create_engine(_dburi)
 
 class User(SQLModel):
     id: Optional[int] = Field(primary_key=True, default=None)
+    fullName: str = Field()
     email: str = Field(unique=True)
 
 

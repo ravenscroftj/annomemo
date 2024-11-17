@@ -37,7 +37,9 @@
             required
           />
           {% if errors.email %}
-          <p class="text-red-500 text-xs italic mt-1">{{ errors.email }}</p>
+          <p class="text-red-500 text-xs italic mt-1">
+            {{ errors.email | safe }}
+          </p>
           {% endif %}
         </div>
         <div class="mb-4">
